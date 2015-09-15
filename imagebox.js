@@ -28,7 +28,7 @@ imagebox=function(){
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
-        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice loaded in '+toc+' milisecs',false,'blue')
+        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) out of <span style="color:red">...</span> image ( <span style="color:red">...</span> KB) retrieved in '+toc+' milisecs',false,'blue')
     }
 
 }
