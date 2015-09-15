@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>ImageBox</title>
+<link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
 <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -9,10 +11,12 @@
 <script src="imagebox.js"></script>
 </head>
 <body>
-	<div class="container" id="clinApps">
+	<div class="container" id="divImageBox">
 		<h3 style="vertical-align:text-top"><a href="http://stonybrookmedicine.edu" target=_blank><img src="SBMed-logo.png" height="35px"></a><i style="font-family:Palatino;color:maroon"> <a href="https://github.com/SBU-BMI/imagebox" target="_blank">ImageBox <i class="fa fa-github-alt"></i></a></i></h3>
-		Client Application for Erich's large image cloud slide server.
+		<pre id="imageBoxMsg"> Client Application for Erich's large image cloud slide server.</pre>
 		<hr>
+		<div id="imageBoxMeta"></div>
+		<img id="imageBoxImg">
 		
 	</div>
 </body>
