@@ -9,15 +9,41 @@ imagebox=function(){
     //
     //run with hash
     var url=location.hash.slice(1)
+    
+    //extract parms
+    var urls=url.split('?')
+    boxURL.value=urls[0]
+    imgURL.value=urls[1].match(/url=[^&]+/)[0].split('=')[1]
+    imgCoord.value=urls[1].match(/xywh=[^&]+/)[0].split('=')[1]
+    boxURL.onkeyup=imgURL.onkeyup=imgCoord.onkeyup=function(evt){
+        if(evt.keyCode==13){ // enter was pressed
+        location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value
+        imagebox() // re-run imageBox with new parameters
+        }
+    }
+    // get image slice
+    var xywh=imgCoord.value.split(',').map(function(ci){return parseFloat(ci)})
+    imagebox.msg('geting '+xywh[2]+' x '+xywh[3]+' slice ...',false,'red')
     imagebox.get(url,imageBoxImg)
+    var tic=(new Date)
+    imageBoxImg.onload=function(){
+        var toc = (new Date)-tic
+        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice loaded in '+toc+' milisecs',false,'blue')
+    }
+
 }
 
-imagebox.msg=function(x,a){
+imagebox.msg=function(x,a,c){
     console.log(x)
     if(a){ // add text flag
         imageBoxMsg.innerHTML+=x
     }else{
         imageBoxMsg.innerHTML=x
+    }
+    if(c){
+        imageBoxMsg.style.color=c
+    }else{
+        imageBoxMsg.style.color='navy'
     }
 }
 imagebox.box='http://130.245.124.21:9090/imagebox'
