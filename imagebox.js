@@ -31,8 +31,14 @@ imagebox=function(){
         imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) out of <span style="color:red">...</span> image ( <span style="color:red">...</span> KB) retrieved in '+toc+' milisecs ('+Math.round(xywh[2]*xywh[3]/1024/(1000*toc/1024))+' Mbs)',false,'blue')
     }
     // support for Boxes
-    imagebox.dropBox()
-
+    if(!imagebox.boxCom.buttonLoaded){
+        imagebox.boxCom()
+    }
+    if(!imagebox.dropBox.buttonLoaded){
+        imagebox.dropBox()
+    }
+    
+    
 }
 
 imagebox.msg=function(x,a,c){
@@ -55,10 +61,12 @@ imagebox.get=function(url,img){
     return img
 }
 imagebox.dropBox=function(){ // add dropbox support
+    imagebox.dropBox.buttonLoaded=true
     var options = {
         // Required. Called when a user selects an item in the Chooser.
         success: function(files) {
-            alert("Here's the file link: " + files[0].link)
+            //alert("Here's the file link: " + files[0].link)
+            imagebox.readFileUrl(files[0].link)
         },
 
         // Optional. Called when the user closes the dialog without selecting a file
@@ -85,6 +93,29 @@ imagebox.dropBox=function(){ // add dropbox support
 
     var button = Dropbox.createChooseButton(options);
     document.getElementById("dropBoxContainer").appendChild(button);
+}
+imagebox.boxCom=function(){
+    $.getScript("https://app.box.com/js/static/select.js").then(function(){
+        imagebox.boxCom.buttonLoaded=true
+        $(document).ready(function(){
+            var boxSelect = new BoxSelect();
+            // Register a success callback handler
+            boxSelect.success(function(response) {
+                //console.log(response);
+                imagebox.readFileUrl(response[0].url)
+            });
+            // Register a cancel callback handler
+            boxSelect.cancel(function() {
+                console.log("The user clicked cancel or closed the popup");
+            });
+        });
+    })
+}
+
+imagebox.readFileUrl=function(url){
+    imgURL.value=url
+    location.hash=boxURL.value+'?url='+imgURL.value+'&xywh=0,0,500,500'
+    imagebox()
 }
 
 
