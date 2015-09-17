@@ -30,6 +30,8 @@ imagebox=function(){
         var toc = (new Date)-tic
         imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) out of <span style="color:red">...</span> image ( <span style="color:red">...</span> KB) retrieved in '+toc+' milisecs ('+Math.round(xywh[2]*xywh[3]/1024/(1000*toc/1024))+' Mbs)',false,'blue')
     }
+    // support for Boxes
+    imagebox.dropBox()
 
 }
 
@@ -52,6 +54,39 @@ imagebox.get=function(url,img){
     img.src=url
     return img
 }
+imagebox.dropBox=function(){ // add dropbox support
+    var options = {
+        // Required. Called when a user selects an item in the Chooser.
+        success: function(files) {
+            alert("Here's the file link: " + files[0].link)
+        },
+
+        // Optional. Called when the user closes the dialog without selecting a file
+        // and does not include any parameters.
+        cancel: function() {
+
+        },
+
+        // Optional. "preview" (default) is a preview link to the document for sharing,
+        // "direct" is an expiring link to download the contents of the file. For more
+        // information about link types, see Link types below.
+        linkType: "direct", // or "direct"
+
+        // Optional. A value of false (default) limits selection to a single file, while
+        // true enables multiple file selection.
+        multiselect: false, // or true
+
+        // Optional. This is a list of file extensions. If specified, the user will
+        // only be able to select files with these extensions. You may also specify
+        // file types, such as "video" or "images" in the list. For more information,
+        // see File types below. By default, all extensions are allowed.
+        //extensions: ['.svs'],
+    };
+
+    var button = Dropbox.createChooseButton(options);
+    document.getElementById("dropBoxContainer").appendChild(button);
+}
+
 
 
 $(document).ready(function(){
