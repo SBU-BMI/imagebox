@@ -6,6 +6,7 @@ imagebox=function(){
         location.hash='http://130.245.124.21:9090/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000'
         imagebox.msg('no image target found so the default is being used')
     }
+    imgSliceUrl.innerHTML=""
     //
     //run with hash
     var url=location.hash.slice(1)
@@ -23,12 +24,13 @@ imagebox=function(){
     }
     // get image slice
     var xywh=imgCoord.value.split(',').map(function(ci){return parseFloat(ci)})
-    imagebox.msg('geting '+xywh[2]+' x '+xywh[3]+' slice ...',false,'red')
+    imagebox.msg('geting '+xywh[2]+' x '+xywh[3]+' slice ... remember first slice of an image takes longer to retrieve',false,'red')
     imagebox.get(url,imageBoxImg)
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
         imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) out of <span style="color:red">...</span> image ( <span style="color:red">...</span> KB) retrieved in '+toc+' milisecs ('+Math.round(xywh[2]*xywh[3]/1024/(1000*toc/1024))+' Mbs)',false,'blue')
+        imgSliceUrl.innerHTML='Stand alone <a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">slice URL</a> (click will open in new page)' 
     }
     // support for Boxes
     if(!imagebox.boxCom.buttonLoaded){
