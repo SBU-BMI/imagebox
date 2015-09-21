@@ -32,7 +32,10 @@
 					<td style="color:maroon;font-size:large">Image URL: </td><td style="color:blue"> <input style="border-width:0px" id="imgURL" size=300></td>
 				</tr>
 				<tr>
-					<td style="color:maroon;font-size:large">Coordinates: </td><td style="color:blue"> <input style="border-width:0px" id="imgCoord" size=50></td>
+					<td style="color:maroon;font-size:large">Coordinates: </td><td style="color:blue"> <input style="border-width:0px" id="imgCoord" size=30> <span style="color:maroon">from scale</span> <select id="selectScale"></select></td>
+				</tr>
+				<tr>
+					<td style="color:maroon;font-size:large">Slice URL: </td><td style="color:blue" id="sliceURL"></td>
 				</tr>
 			</table>
 		</div>
@@ -41,7 +44,7 @@
 		<div id="imageBoxMeta" style="color:red">Information about original image, loading times etc ...</div>
 		-->
 		<hr>
-		<p id="imgSliceUrl"></p>
+		<!--<p id="imgSliceUrl"></p>-->
 		<img id="imageBoxImg">
 
 		

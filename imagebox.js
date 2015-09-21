@@ -7,7 +7,7 @@ imagebox=function(){
         location.hash='http://jonasalmeida-8342.nitrouspro.com:32775/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000'
         imagebox.msg('no image target found so the default is being used')
     }
-    imgSliceUrl.innerHTML=""
+    //sliceURL.innerHTML=""
     //
     //run with hash
     var url=location.hash.slice(1)
@@ -30,8 +30,30 @@ imagebox=function(){
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
-        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) out of <span style="color:red">...</span> image ( <span style="color:red">...</span> KB) retrieved in '+toc+' milisecs ('+Math.round(xywh[2]*xywh[3]/1024/(1000*toc/1024))+' Mbs)',false,'blue')
-        imgSliceUrl.innerHTML='Stand alone <a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">slice URL</a> (click will open in new page)' 
+        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' Mbs) from a <span style="color:red" id="imgSize">...</span> Mb SVS image transfered to box at <span id="transferRate" style="color:red">...</span> Mbs',false,'blue')
+        sliceURL.innerHTML='<a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">(open in new page)</a>' 
+        var imgMeta=function(meta){
+            console.log('meta',meta)
+            selectScale.innerHTML="" // reset scale
+            var size=meta.OME.Image.map(function(im,i){
+                var opt=$('<option value='+(i+1)+'>'+(i+1)+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
+                return im.Pixels.SizeX*im.Pixels.SizeY
+            }).reduce(function(a,b){return a+b})
+            imgSize.textContent=Math.round(size/12024/1024)
+            imgSize.style.color='blue'
+            4
+            
+        }
+        // get full image information
+        url
+        if(!imagebox.meta){imagebox.meta={}}
+        if(!imagebox.meta[imgURL.value]){
+            $.getJSON(url+'&format=meta')
+             .then(function(u){
+                 imgMeta(u)
+             })
+        }else{imgMeta(imagebox.meta[imgURL.value])}
+
     }
     // support for Boxes
     if(!imagebox.boxCom.buttonLoaded){
