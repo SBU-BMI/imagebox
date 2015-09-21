@@ -36,7 +36,7 @@ imagebox=function(){
             console.log('meta',meta)
             selectScale.innerHTML="" // reset scale
             var size=meta.OME.Image.map(function(im,i){
-                var opt=$('<option value='+(i+1)+'>'+(i+1)+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
+                var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
                 return im.Pixels.SizeX*im.Pixels.SizeY
             }).reduce(function(a,b){return a+b})
             imgSize.textContent=Math.round(size/12024/1024)
