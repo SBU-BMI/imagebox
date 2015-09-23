@@ -11,7 +11,11 @@ imagebox=function(){
     //
     //run with hash
     var url=location.hash.slice(1)
-    
+    if(!url.match('scale=')){ // default scale if note specified
+        url+='&scale=0'
+        location.hash=url
+    }
+    4
     //extract parms
     var urls=url.split('?')
     boxURL.value=urls[0]
@@ -48,7 +52,7 @@ imagebox=function(){
         url
         if(!imagebox.meta){imagebox.meta={}}
         if(!imagebox.meta[imgURL.value]){
-            $.getJSON(url+'&format=meta')
+            $.getJSON(url+'&format=json')
              .then(function(u){
                  imgMeta(u)
              })
