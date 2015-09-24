@@ -33,12 +33,12 @@ imagebox=function(){
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
-        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' Mbs) from a <span style="color:red" id="imgSize">...</span> Mb SVS image transfered to box at <span id="transferRate" style="color:red">...</span> Mbs',false,'blue')
+        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' MBs) from a <span style="color:red" id="imgSize">...</span> MB SVS image transfered to box at <span id="transferRate" style="color:red">...</span> MBs',false,'blue')
         sliceURL.innerHTML='<a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">(open stand-alone slice url in new page)</a>' 
         var imgMeta=function(meta){
             console.log('meta',meta)
             selectScale.innerHTML="" // reset scale
-            var size=meta.OME.Image.map(function(im,i){
+            meta.OME.Image.forEach(function(im,i){
                 var scale=urls[1].match(/scale=[^&]+/)[0].split('=')[1]
                 if(i==0){
                     var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
@@ -62,16 +62,17 @@ imagebox=function(){
                     opt.selected=false
                 }
                 
-                return im.Pixels.SizeX*im.Pixels.SizeY
-            }).reduce(function(a,b){return a+b})
+                //return im.Pixels.SizeX*im.Pixels.SizeY
+            })//.reduce(function(a,b){return a+b})
+            var size = meta.transfer.filesize
             // listen to scale selection event
             selectScale.onchange=function(){
                 location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value
                 imagebox()
             }
-            imgSize.textContent=Math.round(size/12024/1024)
+            imgSize.textContent=Math.round(size/1048576)
             imgSize.style.color='blue'
-            transferRate.textContent=Math.round(10*size/12024/1024/(meta.transfer.time/1000))/10
+            transferRate.textContent=Math.round(10*size/1048576/(meta.transfer.time/1000))/10
             transferRate.style.color='blue'
         }
         // get full image information
