@@ -29,24 +29,32 @@ imagebox=function(){
     }
     // get image slice
     var xywh=imgCoord.value.split(',').map(function(ci){return parseFloat(ci)})
-    imagebox.msg('geting '+xywh[2]+' x '+xywh[3]+' slice ... remember first slice of an image takes longer to retrieve',false,'red')
+    imagebox.msg('geting '+xywh[2]+' x '+xywh[3]+' slice ... remember that the first slice of an image takes longer to retrieve',false,'red')
     imagebox.get(url,imageBoxImg)
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
         imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' Mbs) from a <span style="color:red" id="imgSize">...</span> Mb SVS image transfered to box at <span id="transferRate" style="color:red">...</span> Mbs',false,'blue')
-        sliceURL.innerHTML='<a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">(open in new page)</a>' 
+        sliceURL.innerHTML='<a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">(open stand-alone slice url in new page)</a>' 
         var imgMeta=function(meta){
             console.log('meta',meta)
             selectScale.innerHTML="" // reset scale
             var size=meta.OME.Image.map(function(im,i){
-                var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
+                if(i==0){
+                    var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
+                }else{
+                    var scX=Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)
+                    var scY=Math.round(meta.OME.Image[0].Pixels.SizeY/im.Pixels.SizeY)
+                    var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+(scX+scY)/2+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*scX+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*scY+' µm resolution </option>').appendTo(selectScale)[0]
+                    //var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+sc+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*sc+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*sc+' µm resolution </option>').appendTo(selectScale)[0]
+                }
+                
                 return im.Pixels.SizeX*im.Pixels.SizeY
             }).reduce(function(a,b){return a+b})
             imgSize.textContent=Math.round(size/12024/1024)
             imgSize.style.color='blue'
-            4
-            
+            transferRate.textContent=Math.round(10*size/12024/1024/(meta.transfer.time/1000))/10
+            transferRate.style.color='blue'
         }
         // get full image information
         url
@@ -54,6 +62,7 @@ imagebox=function(){
         if(!imagebox.meta[imgURL.value]){
             $.getJSON(url+'&format=json')
              .then(function(u){
+                 imagebox.meta[imgURL.value]=u
                  imgMeta(u)
              })
         }else{imgMeta(imagebox.meta[imgURL.value])}
@@ -117,7 +126,7 @@ imagebox.dropBox=function(){ // add dropbox support
         // only be able to select files with these extensions. You may also specify
         // file types, such as "video" or "images" in the list. For more information,
         // see File types below. By default, all extensions are allowed.
-        //extensions: ['.svs'],
+        extensions: ['.svs'],
     };
 
     var button = Dropbox.createChooseButton(options);
