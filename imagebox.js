@@ -15,7 +15,6 @@ imagebox=function(){
         url+='&scale=0'
         location.hash=url
     }
-    4
     //extract parms
     var urls=url.split('?')
     boxURL.value=urls[0]
@@ -23,7 +22,7 @@ imagebox=function(){
     imgCoord.value=urls[1].match(/xywh=[^&]+/)[0].split('=')[1]
     boxURL.onkeyup=imgURL.onkeyup=imgCoord.onkeyup=function(evt){
         if(evt.keyCode==13){ // enter was pressed
-        location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value
+        location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value
         imagebox() // re-run imageBox with new parameters
         }
     }
@@ -40,24 +39,43 @@ imagebox=function(){
             console.log('meta',meta)
             selectScale.innerHTML="" // reset scale
             var size=meta.OME.Image.map(function(im,i){
+                var scale=urls[1].match(/scale=[^&]+/)[0].split('=')[1]
                 if(i==0){
                     var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)+'), with '+im.Pixels.PhysicalSizeX+' x '+im.Pixels.PhysicalSizeY+' µm resolution </option>').appendTo(selectScale)[0]
                 }else{
                     var scX=Math.round(meta.OME.Image[0].Pixels.SizeX/im.Pixels.SizeX)
                     var scY=Math.round(meta.OME.Image[0].Pixels.SizeY/im.Pixels.SizeY)
-                    var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+(scX+scY)/2+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*scX+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*scY+' µm resolution </option>').appendTo(selectScale)[0]
+                    // check if it is a scaled image or somethign else
+                    var scXY=(scX+scY)/2
+                    if(Math.log2(scXY)==Math.round(Math.log2(scXY))){
+                        var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+scXY+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*scX+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*scY+' µm resolution </option>').appendTo(selectScale)[0]
+                    }else{
+                        var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' Description: '+im.Description+' </option>').appendTo(selectScale)[0]
+                    }
+                    //var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+scXY+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*scX+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*scY+' µm resolution </option>').appendTo(selectScale)[0]
                     //var opt=$('<option value='+i+'>'+i+') '+im.Pixels.SizeX+' x '+im.Pixels.SizeY+' size (1:'+sc+'), with '+meta.OME.Image[0].Pixels.PhysicalSizeX*sc+' x '+meta.OME.Image[0].Pixels.PhysicalSizeY*sc+' µm resolution </option>').appendTo(selectScale)[0]
+                }
+                // select set scale
+                if(i==scale){
+                    opt.selected=true
+                } else {
+                    opt.selected=false
                 }
                 
                 return im.Pixels.SizeX*im.Pixels.SizeY
             }).reduce(function(a,b){return a+b})
+            // listen to scale selection event
+            selectScale.onchange=function(){
+                location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value
+                imagebox()
+            }
             imgSize.textContent=Math.round(size/12024/1024)
             imgSize.style.color='blue'
             transferRate.textContent=Math.round(10*size/12024/1024/(meta.transfer.time/1000))/10
             transferRate.style.color='blue'
         }
         // get full image information
-        url
+        //url
         if(!imagebox.meta){imagebox.meta={}}
         if(!imagebox.meta[imgURL.value]){
             $.getJSON(url+'&format=json')
