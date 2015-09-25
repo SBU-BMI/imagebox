@@ -11,4 +11,4 @@ Screencast of imageBox use (click to open in YouTube):
 
 with the operation from Matlab illustrated at min 3, and again at min 6 
 
-[![Matlab slice]](http://sbu-bmi.github.io/sliceMatlab.png)
+[![sliceMatlab.png](https://raw.githubusercontent.com/SBU-BMI/imagebox/gh-pages/sliceMatlab.png)](https://youtu.be/PHzWfIoS2nA?t=180)
