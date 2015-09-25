@@ -4,7 +4,7 @@ imagebox=function(){
     // ini
     if(location.hash.length<2){
         //location.hash='http://130.245.124.21:9090/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000'
-        location.hash='http://jonasalmeida-8342.nitrouspro.com:32776/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000&scale=0'
+        location.hash='http://imagebox-128854.nitrousapp.com:3000/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000&scale=0'
         imagebox.msg('no image target found so the default is being used')
     }
     //sliceURL.innerHTML=""
@@ -33,7 +33,7 @@ imagebox=function(){
     var tic=(new Date)
     imageBoxImg.onload=function(){
         var toc = (new Date)-tic
-        imagebox.msg(xywh[2]+' x '+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' MBs) from a <span style="color:red" id="imgSize">...</span> MB SVS image transfered to box at <span id="transferRate" style="color:red">...</span> MBs',false,'blue')
+        imagebox.msg(xywh[2]+'x'+xywh[3]+' slice ('+Math.round(xywh[2]*xywh[3]/1024)+' KB) retrieved in '+toc+' milisecs ('+Math.round(100*xywh[2]*xywh[3]/1024/(1000*toc/1024))/100+' MBs) from a <span style="color:red" id="imgSize">...</span> MB SVS image transfered to box at <span id="transferRate" style="color:red">...</span> MBs',false,'blue')
         sliceURL.innerHTML='<a style="background-color:yellow" href="'+location.hash.slice(1)+'" target="_blank">(open stand-alone slice url in new page)</a>' 
         var imgMeta=function(meta){
             console.log('meta',meta)
