@@ -5,7 +5,7 @@ Live at http://sbu-bmi.github.io/imagebox !
 ___
 
 
-Screencast of imageBox use:
+Screencast of imageBox use (click to open in YouTube):
 
 [![click to play](http://img.youtube.com/vi/PHzWfIoS2nA/0.jpg)](http://www.youtube.com/watch?v=PHzWfIoS2nA)
 
