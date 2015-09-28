@@ -87,6 +87,30 @@ imagebox=function(){
         }else{imgMeta(imagebox.meta[imgURL.value])}
 
     }
+    imageBoxImg.onerror=function(){
+        // maybe error cause by out of range coordinates
+        var xywh=imgCoord.value.split(',').map(function(ci){return parseFloat(ci)})
+        var sc=parseInt(selectScale.value)
+        var im=imagebox.meta[imgURL.value].OME.Image[sc]
+        // check origin
+        var flag=false
+        if(xywh[0]>im.Pixels.SizeX){xywh[0]=0;flag=true}
+        if(xywh[1]>im.Pixels.SizeY){xywh[1]=0;flag=true}
+        if((xywh[2]-xywh[0])>im.Pixels.SizeX){
+            xywh[2]=im.Pixels.SizeX-xywh[0]
+            flag=true
+        }
+        if((xywh[3]-xywh[1])>im.Pixels.SizeY){
+            xywh[3]=im.Pixels.SizeY-xywh[1]
+            flag=true
+        }
+        if(flag){
+            imgCoord.value=xywh.join(',')
+            location.hash=location.hash.replace(/xywh=[^&]*/,'xywh='+imgCoord.value)
+            imagebox()
+        }
+        
+    }
     // support for Boxes
     if(!imagebox.boxCom.buttonLoaded){
         imagebox.boxCom()
