@@ -207,3 +207,17 @@ $(document).ready(function(){
     imagebox()
 })
 
+/* Service configuration info
+
+## Server configuration
+../jdk1.8.0_60/bin/java -jar W3Cmf-3.jar 500000 10
+
+(The first parm is min megabytes before clearing of queue files and the second is max cache files)
+
+## Docker setting configuration
+1. docker pull sbubmi/imagebox:latest
+2. docker run --name imagebox1 -it -v /Users/jonasalmeida/MIS/image-cache:/imagebox -p 4000:3000 -d sbubmi/imagebox:latest
+(in this case mapping internal port 3000 to external 4000)
+
+*/
+
