@@ -98,11 +98,11 @@ imagebox=function(){
         var flag=false
         if(xywh[0]>im.Pixels.SizeX){xywh[0]=0;flag=true}
         if(xywh[1]>im.Pixels.SizeY){xywh[1]=0;flag=true}
-        if((xywh[2]-xywh[0])>im.Pixels.SizeX){
+        if((xywh[2]+xywh[0])>im.Pixels.SizeX){
             xywh[2]=im.Pixels.SizeX-xywh[0]
             flag=true
         }
-        if((xywh[3]-xywh[1])>im.Pixels.SizeY){
+        if((xywh[3]+xywh[1])>im.Pixels.SizeY){
             xywh[3]=im.Pixels.SizeY-xywh[1]
             flag=true
         }
