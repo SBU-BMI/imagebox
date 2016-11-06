@@ -4,9 +4,10 @@ imagebox=function(){
     // ini
     if(location.hash.length<2){
         //location.hash='http://130.245.124.21:9090/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000'
-        //location.hash='http://imagebox-128854.nitrousapp.com:3000/imagebox?url=https://tcga-data.nci.nih.gov/tcgafiles/ftp_auth/distro_ftpusers/anonymous/tumor/gbm/bcr/nationwidechildrens.org/tissue_images/slide_images/nationwidechildrens.org_GBM.tissue_images.Level_1.1.42.0/TCGA-02-0001-01C-01-BS1.0cc8ca55-d024-440c-a4f0-01cf5b3af861.svs&xywh=10000,8000,1000,1000&scale=0'
         //location.hash='http://imagebox-128854.nitrousapp.com:3000/imagebox?url=http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs&xywh=8300,19000,1000,1000&scale=0'
-        location.hash='http://104.236.248.87:4000/imagebox?url=http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs&xywh=8300,19000,1000,1000&scale=0'
+        //location.hash='http://localhost:4000/imagebox?url=http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs&xywh=8300,19000,1000,1000&scale=0'
+        //location.hash='http://104.236.248.87:4000/imagebox?url=http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs&xywh=8300,19000,1000,1000&scale=0'
+        location.hash='http://104.131.166.75:3000/imagebox?url=http://openslide.cs.cmu.edu/download/openslide-testdata/Aperio/CMU-1.svs&xywh=8300,19000,1000,1000&scale=0&format=jpg'
         imagebox.msg('no image target found so the default is being used')
     }
     //sliceURL.innerHTML=""
@@ -17,6 +18,10 @@ imagebox=function(){
         url+='&scale=0'
         location.hash=url
     }
+    if(!url.match('format=')){ // default scale if note specified
+        url+='&format=jpg'
+        location.hash=url
+    }
     //extract parms
     var urls=url.split('?')
     boxURL.value=urls[0]
@@ -24,7 +29,7 @@ imagebox=function(){
     imgCoord.value=urls[1].match(/xywh=[^&]+/)[0].split('=')[1]
     boxURL.onkeyup=imgURL.onkeyup=imgCoord.onkeyup=function(evt){
         if(evt.keyCode==13){ // enter was pressed
-        location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value
+        location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value+'&format=jpg'
         imagebox() // re-run imageBox with new parameters
         }
     }
@@ -69,7 +74,7 @@ imagebox=function(){
             var size = meta.transfer.filesize
             // listen to scale selection event
             selectScale.onchange=function(){
-                location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value
+                location.hash=boxURL.value+'?url='+imgURL.value+'&xywh='+imgCoord.value+'&scale='+selectScale.value+'&format=jpg'
                 imagebox()
             }
             imgSize.textContent=Math.round(size/1048576)
@@ -81,7 +86,7 @@ imagebox=function(){
         //url
         if(!imagebox.meta){imagebox.meta={}}
         if(!imagebox.meta[imgURL.value]){
-            $.getJSON(url+'&format=json')
+            $.getJSON(url.replace('format=jpg','format=json'))
              .then(function(u){
                  imagebox.meta[imgURL.value]=u
                  imgMeta(u)
