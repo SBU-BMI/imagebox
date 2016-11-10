@@ -2,6 +2,8 @@
 Client library to operate slice servers pointing to Box file picker APIs
 ___
 Live at http://sbu-bmi.github.io/imagebox !
+
+Web service software at https://hub.docker.com/r/sbubmi/imagebox
 ___
 
 
