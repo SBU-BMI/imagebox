@@ -4,6 +4,10 @@ ___
 Live at **http://sbu-bmi.github.io/imagebox** !
 
 Web service software at https://hub.docker.com/r/sbubmi/imagebox
+
+Published report:
+
+**Bremer E, T Kurc , Y Gao , J Saltz , JS Almeida (2017) Safe “cloudification” of large images through picker APIs. AMIA Annu Symp Proc. 2016:342-351. [[PMID:28269829](https://www.ncbi.nlm.nih.gov/pubmed/28269829)].**
 ___
 
 
